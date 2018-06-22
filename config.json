@@ -38,23 +38,31 @@
         "ssl_cert":"/home/pi/garage-door-controller-cert/localhost.crt"
     },
     "doors":{  
-        "left":{  
-            "name":"LEFT",
-            "relay_pin":23,
-            "state_pin":17,
-            "state_pin_closed_value":0,
-            "approx_time_to_close":15,
-            "approx_time_to_open":15,
-            "openhab_name":"g_door_left"
-        },
         "right":{  
-            "name":"RIGHT",
-            "relay_pin":24,
-            "state_pin":21,
+            "name":"Manual Operation",
+            "switch_count":1,
+            "state_pin":19,
             "state_pin_closed_value":0,
             "approx_time_to_close":15,
             "approx_time_to_open":15,
-            "openhab_name":"g_door_right"
+        },
+        "center":{  
+            "name":"Car A",
+            "switch_count":2,
+            "relay_pin":17,
+            "open_pin":27,
+            "open_pin_open_value":0,
+            "closed_pin":22,
+            "closed_pin_closed_value":0,
+        },
+        "left":{  
+            "name":"Car B",
+            "switch_count":2,
+            "relay_pin":2,
+            "open_pin":3,
+            "open_pin_open_value":0,
+            "closed_pin":4,
+            "closed_pin_closed_value":0,
         }
     }
 }
