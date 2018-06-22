@@ -112,19 +112,32 @@ Software Installation:
 6.  **Edit `config.json`**
     
     You'll need one configuration entry for each garage door.  The prefixes <R> <1> or <2> indicate those required by each sensor configuration.  <D> may be omitted if the default is correct.
+
     The settings are fairly obvious, but are defined as follows:
+
     **name <R>**: The name for the garage door as it will appear on the controller app.
+
     **sensor_count <RD>**: [1|2] 1 if there is only a closed sensor [default] or 2 if there are open and closed sensors.  Defaults to 1.
+
     **relay_pin <RO>**: The GPIO pin connecting the RPi to the relay for that door.  May be omitted if the door does not have an opener.
+
     **state_pin**: The GPIO pin connecting to the contact switch.
+
     **state_pin_closed_value**: The GPIO pin value (0 or 1) that indicates the door is closed. Defaults to 0.
+
     **approx_time_to_close**: How long the garage door typically takes to close.
+
     **approx_time_to_open**: How long the garage door typically takes to open.
+
     **open_pin**: The GPIO pin connecting to the open sensor.
+
     **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. Defaults to 0.
+
     **closed_pin**: The GPIO pin connecting to the closed sensor.
+
     **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. Defaults to 0.
-         **openhab_name**: Required when linking to openHAB.
+
+    **openhab_name**: Required when linking to openHAB.
 
     The **approx_time_to_XXX** options are not particularly crucial.  They tell the program when to shift from the opening or closing state to the "open" or "closed" state.  You don't need to be out there with a stopwatch and you wont break anything if they are off.  In the worst case, you may end up with a slightly odd behavior when closing the garage door whereby it goes from "closing" to "open" (briefly) and then to "closed" when the sensor detects that the door is actually closed.
 
