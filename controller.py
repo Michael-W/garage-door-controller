@@ -44,32 +44,51 @@ class Door(object):
     def __init__(self, doorId, config):
         self.id = doorId
         self.name = config['name']
-        self.relay_pin = config['relay_pin']
-        self.state_pin = config['state_pin']
+        self.switch_count = config.get('switch_count', 1)
+        self.relay_pin = config.get('relay_pin', 16)
+        self.state_pin = config.get('state_pin', 20)
         self.state_pin_closed_value = config.get('state_pin_closed_value', 0)
+        self.open_pin = config.get('open_pin', 20)
+        self.closed_pin = config.get('closed_pin', 21)
+        self.open_pin_open_value = config.get('open_pin_open_value', 0)
+        self.closed_pin_closed_value = config.get('closed_pin_closed_value', 0)
         self.time_to_close = config.get('time_to_close', 10)
         self.time_to_open = config.get('time_to_open', 10)
         self.openhab_name = config.get('openhab_name')
         self.open_time = time.time()
         gpio.setup(self.relay_pin, gpio.OUT)
         gpio.setup(self.state_pin, gpio.IN, pull_up_down=gpio.PUD_UP)
+        gpio.setup(self.open_pin, gpio.IN, pull_up_down=gpio.PUD_UP)
+        gpio.setup(self.closed_pin, gpio.IN, pull_up_down=gpio.PUD_UP)
         gpio.output(self.relay_pin, True)
 
     def get_state(self):
-        if gpio.input(self.state_pin) == self.state_pin_closed_value:
-            return 'closed'
-        elif self.last_action == 'open':
-            if time.time() - self.last_action_time >= self.time_to_open:
+        if self.switch_count == 1:
+            if gpio.input(self.state_pin) == self.state_pin_closed_value:
+                return 'closed'
+            elif self.last_action == 'open':
+                if time.time() - self.last_action_time >= self.time_to_open:
+                    return 'open'
+                else:
+                    return 'opening'
+            elif self.last_action ==  'close':
+                if time.time() - self.last_action_time >= self.time_to_close:
+                    return 'open' # This state indicates a problem
+                else:
+                    return 'closing'
+            else:
                 return 'open'
-            else:
-                return 'opening'
-        elif self.last_action ==  'close':
-            if time.time() - self.last_action_time >= self.time_to_close:
-                return 'open' # This state indicates a problem
-            else:
-                return 'closing'
         else:
-            return 'open'
+            if gpio.input(self.open_pin) == self.open_pin_open_value:
+                return 'open'
+            elif gpio.input(self.closed_pin) == self.closed_pin_closed_value:
+                return 'closed'
+            elif self.last_action == 'open':
+                return 'opening'
+            elif self.last_action == 'close':
+                return 'closing'
+            else:
+                return 'open'
 
     def toggle_relay(self):
         state = self.get_state()
@@ -143,7 +162,7 @@ class Controller(object):
             if new_state == 'closed':
                 if self.use_alerts:
                     if door.msg_sent == True:
-                        title = "%s's garage doors closed" % door.name
+                        title = "%s's garage door closed" % door.name
                         etime = elapsed_time(int(time.time() - door.open_time))
                         message = "%s's garage door is now closed after %s "% (door.name, etime)
                         if self.alert_type == 'smtp':
