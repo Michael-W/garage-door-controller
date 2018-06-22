@@ -24,7 +24,9 @@ Requirements:
 * [USB WiFi dongle](http://amzn.com/B003MTTJOY) (If connecting wirelessly)
 * 8 GB micro SD Card
 * Relay Module, 1 channel per garage door (I used [SainSmart](http://amzn.com/B0057OC6D8 ), but there are [other options](http://amzn.com/B00DIMGFHY) as well)
-* [Magnetic Contact Switch](http://amzn.com/B006VK6YLC) (one per garage door)
+* [Magnetic Contact Switch](http://amzn.com/B006VK6YLC) (one, or two per garage door)
+    or
+* [Garage Door Limit Switch](http://amzn.com//B004CAN18W) (one, or two per garage door)
 * [Female-to-Female jumper wires](http://amzn.com/B007XPSVMY) (you'll need around 10, or you can just solder)
 * 2-conductor electrical wire
 
@@ -40,13 +42,19 @@ Hardware Setup:
 
 *Step 1: Install the magnetic contact switches:*
 
-The contact switches are the sensors that the raspberry pi will use to recognize whether the garage doors are open or shut.  You need to install one on each door so that the switch is *closed* when the garage doors are closed.  Attach the end without wire hookups to the door itself, and the other end (the one that wires get attached to) to the frame of the door in such a way that they are next to each other when the garage door is shut.  There can be some space between them, but they should be close and aligned properly, like this:
+You must install one contact switch to indicate that the door is closed.  A second switch to show that the door is open is optional.
+The contact switches are the sensors that the raspberry pi will use to recognize whether the garage doors are open or shut.  You need to install one (or two) on each door so that the switch is *closed* when the garage doors are closed (or open).  
+For magnetic switches attach the end without wire hookups to the door itself, and the other end (the one that wires get attached to) to the frame of the door in such a way that they are next to each other when the garage door is shut.  There can be some space between them, but they should be close and aligned properly, like this:
 
 ![Sample closed contact switch][3]
 
+For door opener limit switches connect one wire to the single contact and the other to a convenient fastener on the actuator rail.
+
+![Closed switch door closed][7] ![Open switch door closed][6] 
+
 *Step 2: Install the relays:*
 
-The relays are used to mimic a push button being pressed which will in turn cause your garage doors to open and shut.  Each relay channel is wired to the garage door opener identically to and in parallel with the existing push button wiring.  You'll want to consult your model's manual, or experiment with paper clips, but it should be wired somewhere around here:
+The relays are used to mimic a push button being pressed which will in turn cause your garage doors to open and shut.  Each relay channel is wired to the garage door opener identically to and in parallel with the existing push button wiring.  You'll want to consult your models manual, or experiment with paper clips, but it should be wired somewhere around here:
 
 ![!\[Wiring the garage door opener\]][4]
     
@@ -103,13 +111,20 @@ Software Installation:
     
 6.  **Edit `config.json`**
     
-    You'll need one configuration entry for each garage door.  The settings are fairly obvious, but are defined as follows:
-    - **name**: The name for the garage door as it will appear on the controller app.
-    - **relay_pin**: The GPIO pin connecting the RPi to the relay for that door.
-    - **state_pin**: The GPIO pin conneting to the contact switch.
-    - **state_pin_closed_value**: The GPIO pin value (0 or 1) that indicates the door is closed. Defaults to 0.
-    - **approx_time_to_close**: How long the garage door typically takes to close.
-    - **approx_time_to_open**: How long the garage door typically takes to open.
+    You'll need one configuration entry for each garage door.  The prefixes <R> <1> or <2> indicate those required by each sensor configuration.  <D> may be omitted if the default is correct.
+    The settings are fairly obvious, but are defined as follows:
+    <R>  **name**: The name for the garage door as it will appear on the controller app.
+    <D>  **sensor_count**: [1|2] 1 if there is only a closed sensor [default] or 2 if there are open and closed sensors.  Defaults to 1.
+    <R>  **relay_pin**: The GPIO pin connecting the RPi to the relay for that door.  May be omitted if the door does not have an opener.
+    <1R> **state_pin**: The GPIO pin connecting to the contact switch.
+    <1D> **state_pin_closed_value**: The GPIO pin value (0 or 1) that indicates the door is closed. Defaults to 0.
+    <1>  **approx_time_to_close**: How long the garage door typically takes to close.
+    <1>  **approx_time_to_open**: How long the garage door typically takes to open.
+    <2>  **open_pin**: The GPIO pin connecting to the open sensor.
+    <2D> **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. Defaults to 0.
+    <2>  **closed_pin**: The GPIO pin connecting to the closed sensor.
+    <2D> **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. Defaults to 0.
+         **openhab_name**: Required when linking to openHAB.
 
     The **approx_time_to_XXX** options are not particularly crucial.  They tell the program when to shift from the opening or closing state to the "open" or "closed" state.  You don't need to be out there with a stopwatch and you wont break anything if they are off.  In the worst case, you may end up with a slightly odd behavior when closing the garage door whereby it goes from "closing" to "open" (briefly) and then to "closed" when the sensor detects that the door is actually closed.
 
@@ -141,4 +156,6 @@ This section contains the features I would like to add to the application, but d
   [3]: http://i.imgur.com/vPHx7kF.png
   [4]: http://i.imgur.com/AkNl6FI.jpg
   [5]: http://i.imgur.com/48bpyG0.png
+  [6]: http://i.imgur.com/qQmahvC.png
+  [7]: http://i.imgur.com/Wqn76S1.png
   
