@@ -111,16 +111,16 @@ Software Installation:
     
 6.  **Edit `config.json`**
     
-    You'll need one configuration entry for each garage door.  The prefixes <R> <1> or <2> indicate those required by each sensor configuration.  <D> may be omitted if the default is correct.
+    You'll need one configuration entry for each garage door.  The prefixes <R\> <1\> or <2\> indicate those required by each sensor configuration.  <D> may be omitted if the default is correct.
 
     The settings are fairly obvious, but are defined as follows:
-    
-    **name**: The name for the garage door as it will appear on the controller app.
-    
-    **sensor_count <RD>**: [1|2] 1 if there is only a closed sensor [default] or 2 if there are open and closed sensors.  Defaults to 1.
-    
-    **relay_pin <RO>**: The GPIO pin connecting the RPi to the relay for that door.  May be omitted if the door does not have an opener.
-    
+
+   <R\> __name__: The name for the garage door as it will appear on the controller app.
+
+    **sensor_count**: [1|2] 1 if there is only a closed sensor [default] or 2 if there are open and closed sensors.  Defaults to 1.
+
+    **relay_pin <RO\>**: The GPIO pin connecting the RPi to the relay for that door.  May be omitted if the door does not have an opener.
+
     **state_pin**: The GPIO pin connecting to the contact switch.
 
     **state_pin_closed_value**: The GPIO pin value (0 or 1) that indicates the door is closed. Defaults to 0.
