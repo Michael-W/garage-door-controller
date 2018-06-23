@@ -127,7 +127,7 @@ Software Installation:
     - <2\> **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. **Default: 0**.
     - <2\> **closed_pin**: The GPIO pin connecting to the 'closed' sensor.
     - <2\> **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. **Default: 0**.
-    - <O\> **openhab_name**: Required when linking to openHAB.
+    - <S\> **openhab_name**: Required when linking to openHAB.
 
     The **approx_time_to_XXX** options are not particularly crucial.  They tell the program when to shift from the opening or closing state to the "open" or "closed" state when there is only a closed sensor. You don't need to be out there with a stopwatch and you wont break anything if they are off.  In the worst case, you may end up with a slightly odd behavior when closing the garage door whereby it goes from "closing" to "open" (briefly) and then to "closed" when the sensor detects that the door is actually closed.
 
