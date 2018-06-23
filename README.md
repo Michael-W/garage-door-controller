@@ -64,7 +64,7 @@ The following diagram illustrates how to wire up a two-door controller.  The pro
 
 ![enter image description here][5]
 
-Note: User [@lamping7](https://github.com/lamping7) has kindly informed me that my wiring schematic is not good.  He warns that the relay should not be powered directly off of the Raspberry Pi.  See his explanation and proposed solution [here](https://github.com/andrewshilliday/garage-door-controller/issues/16).  That being said, I've been running my Raspberry Pi according to the above schematic for years now and I haven't yet fried anything or set fire to my house.  Your milage may vary.
+Note: User [@lamping7](https://github.com/lamping7) has kindly informed me that my wiring schematic is not good.  He warns that the relay should not be powered directly off of the Raspberry Pi.  See his explanation and proposed solution [here](https://github.com/andrewshilliday/garage-door-controller/issues/16).  That being said, I've been running my Raspberry Pi according to the above schematic for years now and I haven't yet fried anything or set fire to my house.  Your mileage may vary.
 
 Software Installation:
 -----
@@ -111,35 +111,25 @@ Software Installation:
     
 6.  **Edit `config.json`**
     
-    You'll need one configuration entry for each garage door.  The prefixes <R\> <1\> or <2\> indicate those required by each sensor configuration.  <D> may be omitted if the default is correct.
+    You'll need one configuration entry for each garage door.
+    The prefixes <R\> <1\> or <2\> indicate those required by each sensor configuration.  <S\> is special.  Any setting may be omitted if the default is correct.  If there are <1\> settings for a door with two sensors they are ignored, and vice-versa.
 
-    The settings are fairly obvious, but are defined as follows:
+    The settings are defined as follows:
 
-   <R\> __name__: The name for the garage door as it will appear on the controller app.
+    - <R\> **name**: The name for the garage door as it will appear on the controller app.
+    - <R\> **sensor_count**: (1 or 2) sensors per door. **Default: 1**.
+    - <R\> **relay_pin**: The GPIO pin connecting the RPi to the relay for that door. Not needed if the door has no opener.
+    - <1\> **state_pin**: The GPIO pin connecting to the single 'closed' sensor.
+    - <1\> **state_pin_closed_value**: The GPIO pin value (0 or 1) that indicates the door is closed. **Default: 0**.
+    - <1\> **approx_time_to_close**: How long the garage door typically takes to close. **Default: 15**.
+    - <1\> **approx_time_to_open**: How long the garage door typically takes to open. **Default: 15**.
+    - <2\> **open_pin**: The GPIO pin connecting to the 'open' sensor.
+    - <2\> **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. **Default: 0**.
+    - <2\> **closed_pin**: The GPIO pin connecting to the 'closed' sensor.
+    - <2\> **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. **Default: 0**.
+    - <O\> **openhab_name**: Required when linking to openHAB.
 
-    **sensor_count**: [1|2] 1 if there is only a closed sensor [default] or 2 if there are open and closed sensors.  Defaults to 1.
-
-    **relay_pin <RO\>**: The GPIO pin connecting the RPi to the relay for that door.  May be omitted if the door does not have an opener.
-
-    **state_pin**: The GPIO pin connecting to the contact switch.
-
-    **state_pin_closed_value**: The GPIO pin value (0 or 1) that indicates the door is closed. Defaults to 0.
-
-    **approx_time_to_close**: How long the garage door typically takes to close.
-
-    **approx_time_to_open**: How long the garage door typically takes to open.
-
-    **open_pin**: The GPIO pin connecting to the open sensor.
-
-    **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. Defaults to 0.
-
-    **closed_pin**: The GPIO pin connecting to the closed sensor.
-
-    **open_pin_open_value**: The GPIO pin value (0 or 1) that indicates the door is open. Defaults to 0.
-
-    **openhab_name**: Required when linking to openHAB.
-
-    The **approx_time_to_XXX** options are not particularly crucial.  They tell the program when to shift from the opening or closing state to the "open" or "closed" state.  You don't need to be out there with a stopwatch and you wont break anything if they are off.  In the worst case, you may end up with a slightly odd behavior when closing the garage door whereby it goes from "closing" to "open" (briefly) and then to "closed" when the sensor detects that the door is actually closed.
+    The **approx_time_to_XXX** options are not particularly crucial.  They tell the program when to shift from the opening or closing state to the "open" or "closed" state when there is only a closed sensor. You don't need to be out there with a stopwatch and you wont break anything if they are off.  In the worst case, you may end up with a slightly odd behavior when closing the garage door whereby it goes from "closing" to "open" (briefly) and then to "closed" when the sensor detects that the door is actually closed.
 
         
 7.  **Set to launch at startup**
