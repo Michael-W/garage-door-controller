@@ -3,7 +3,7 @@
 
 Monitor and control your garage doors from the web via a Raspberry Pi.
 
-![Screenshot from the original][1] &nbsp; ![Screenshot with a picture][2]
+![Screenshot with a picture][2]
 
 Overview:
 ---------
@@ -153,8 +153,6 @@ This section contains the features I would like to add to the application, but d
 * *Occupancy sensors*: Add proximity sensors to check if car port is in use
 * *IFTTT Integration*: make a smooth secure way to call the door and get information online
 
-
-  [1]: http://i.imgur.com/rDx9YIt.png
   [2]: http://i.imgur.com/2Uvye9j.png
   [3]: http://i.imgur.com/vPHx7kF.png
   [4]: http://i.imgur.com/AkNl6FI.jpg
